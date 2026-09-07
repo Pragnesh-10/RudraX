@@ -55,16 +55,16 @@ if prediction != "Select an option...":
     c1, c2, c3, c4 = st.columns([1,1,2,2])
     with c1:
         st.markdown(f"**Key $k$**<br>'{fact1_k_str}'", unsafe_allow_html=True)
-        st.dataframe(pd.DataFrame(fact1_k_vec.numpy()).style.background_gradient(cmap='Greens', axis=None))
+        st.dataframe(pd.DataFrame(fact1_k_vec.numpy().round(3), columns=["value"]))
     with c2:
         st.markdown(f"**Value $v$**<br>'{fact1_v_str}'", unsafe_allow_html=True)
-        st.dataframe(pd.DataFrame(fact1_v_vec.numpy()).style.background_gradient(cmap='Oranges', axis=None))
+        st.dataframe(pd.DataFrame(fact1_v_vec.numpy().round(3), columns=["value"]))
     with c3:
         st.markdown(f"**Outer Product $v k^T$**")
-        st.dataframe(pd.DataFrame(torch.outer(fact1_v_vec, fact1_k_vec).numpy()).style.background_gradient(cmap='Purples', axis=None))
+        st.dataframe(pd.DataFrame(torch.outer(fact1_v_vec, fact1_k_vec).numpy().round(3)))
     with c4:
         st.markdown("**State Matrix $M$** (After Addition)")
-        st.dataframe(pd.DataFrame(state_after_1).style.background_gradient(cmap='Blues', axis=None))
+        st.dataframe(pd.DataFrame(state_after_1.round(3)))
         
     st.info("""
     **Frontier Connection: Dragon Hatchling (BDH)**  
