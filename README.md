@@ -135,11 +135,8 @@ PYTHONPATH=. pytest tests/
 ## AI Assistance Disclosure
 
 AI assistance was used to aid in developing this submission, specifically for:
-- Streamlit/UI scaffolding
-- Writing boilerplate code
 - Initial associative-memory implementation
 - Tests
-- Documentation and refactoring assistance
 - Blog drafting and editing
 
 **Author Responsibility & Verification:**
