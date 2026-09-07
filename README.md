@@ -1,11 +1,8 @@
 ---
 title: RudraX
-emoji: chart_with_upwards_trend
-colorFrom: indigo
-colorTo: blue
 sdk: streamlit
 app_file: app.py
-pinned: false
+
 ---
 
 # Post-Transformer Architectures: Fixed Memory vs. Growing Context
