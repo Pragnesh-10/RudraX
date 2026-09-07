@@ -29,15 +29,32 @@ with st.expander("Model Assumptions & Limitations (Click to view)"):
     """)
 
 # --- 1. PREDICTION ---
+st.caption("PREDICT")
 st.header("1. Make a Prediction")
+
+st.markdown("""
+**LIVE EXPERIMENT PROTOCOL**
+- **State:** 8 × 8
+- **Facts:** 20
+- **Shared-key component:** 80%
+- **Seed:** 42
+- **Evaluation:** cosine-similarity nearest-answer retrieval
+""")
+
+st.warning("""
+**Limitation:** This experiment demonstrates retrieval interference in this specific dense outer-product associative memory. It does not establish that all recurrent architectures exhibit the same interference curve. The toy model is not an implementation of BDH or BDH-CQ.
+""")
+
 prediction = st.radio(
-    f"We have an 8x8 state matrix. We will store 20 facts with 80% shared-key component. What do you expect will happen to recall?",
+    f"What do you expect will happen to recall?",
     ["Select an option...", "Recall will increase", "Recall will decrease", "Recall will stay similar", "The system runs out of GPU memory"]
 )
 
 if prediction != "Select an option...":
     st.divider()
     
+    # --- 2. WRITE INFORMATION ---
+    st.caption("LIVE")
     st.header("2. Write Information into Fixed State")
     st.markdown("**LIVE EXPERIMENT** | Generated and evaluated now in PyTorch.")
     
@@ -50,7 +67,9 @@ if prediction != "Select an option...":
     state_after_1 = mem.get_state().numpy()
     
     st.markdown("### What is stored?")
-    st.markdown("There is no new row called 'Paris'. The association is distributed across the existing state.")
+    st.markdown("**No new memory slot is created for this fact. The existing state matrix is updated.**")
+    st.latex(r"M_{t+1} = M_t + v_t k_t^T")
+    st.latex(r"\hat{y} = M_t k_{query}")
     
     c1, c2, c3, c4 = st.columns([1,1,2,2])
     with c1:
@@ -66,9 +85,10 @@ if prediction != "Select an option...":
         st.markdown("**State Matrix $M$** (After Addition)")
         st.dataframe(pd.DataFrame(state_after_1.round(3)))
         
+    st.caption("PRIMARY SOURCE")
     st.info("""
     **Frontier Connection: Dragon Hatchling (BDH)**  
-    Our toy model updates a dense matrix $M$ via outer-product writes. In contrast, **BDH** achieves this $O(1)$ state through a scale-free network of locally interacting neurons, utilizing **evolving synaptic/edge state** as working memory. The BDH paper reports that this synaptic state carries interpretable information—for instance, concept-related inputs dynamically lead to specific synaptic responses (e.g., tracking currencies).
+    Our toy model uses a dense outer-product state. BDH uses a fundamentally richer recurrent network with local interactions, sparse activity, and evolving synaptic/edge state. The BDH paper reports that this synaptic state carries interpretable information—for instance, concept-related inputs dynamically lead to specific synaptic responses (e.g., tracking currencies).
     """)
         
     for i in range(1, len(pairs)):
@@ -79,9 +99,12 @@ if prediction != "Select an option...":
     st.divider()
     
     # --- 3. RETRIEVE IT ---
+    st.caption("MEASURED")
     st.header("3. Retrieve Information (Truth vs Prediction)")
-    st.markdown(f"### Actual Result: Recall = {acc:.1f}%")
-    st.markdown("Your prediction was: **" + prediction + "**")
+    
+    st.markdown("### Prediction → Actual Result")
+    st.markdown(f"**Prediction:** {prediction}")
+    st.markdown(f"**Measured recall:** {acc:.1f}%")
     
     st.markdown("Retrieval Log (First 5):")
     for res in results[:5]:
@@ -110,6 +133,7 @@ if prediction != "Select an option...":
     If $key_A \\approx key_B$, then $write_A \\approx write_B$. Retrieval becomes mixed.
     """)
     
+    st.caption("PRIMARY SOURCE")
     st.warning("""
     **Frontier Connection: BDH-CQ & Capacity Limits**  
     **BDH-CQ** uses a recurrent contextual memory to store history: $S_t=U_\\epsilon(S_{t-1},D_t)$, where demonstrations $D_t$ iteratively update the memory. It then performs latent reasoning on this compressed state: $H_{r+1}=F_\\epsilon(H_r,S_K)$.
@@ -155,7 +179,10 @@ if prediction != "Select an option...":
     st.divider()
 
     # --- 7. KV CACHE COMPARISON ---
+    st.caption("ANALYTICAL")
     st.header("7. Compare Architecture (KV Cache vs Fixed State)")
+    
+    st.info("**Fixed state size does not mean unlimited memory capacity. It means the representation does not allocate a new state slot for every token.**")
     st.markdown("**ANALYTICAL** | Calculated from the KV-cache formula.")
     
     colA, colB = st.columns(2)
@@ -232,5 +259,9 @@ if prediction != "Select an option...":
     for _, _, kv, vv in p: m.update(kv, vv)
     sb_acc, _ = evaluate_memory(m, p, v)
     
-    st.markdown(f"**State size:** {sb_dim}x{sb_dim} | **Facts stored:** {sb_facts} | **Measured correlation:** {sb_msim:.2f}")
-    st.markdown(f"### Recall: {sb_acc:.1f}%")
+    st.markdown("### Immediate Consequence")
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("State size", f"{sb_dim}x{sb_dim}")
+    m2.metric("Facts stored", sb_facts)
+    m3.metric("Measured correlation", f"{sb_msim:.2f}")
+    m4.metric("Recall", f"{sb_acc:.1f}%")

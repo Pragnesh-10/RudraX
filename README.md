@@ -130,14 +130,17 @@ PYTHONPATH=. pytest tests/
 | **Weights** | No pretrained/model weights used. |
 | **Graphics** | No external graphics used. Visualizations generated natively via Streamlit and Altair. |
 | **Fonts** | System fonts used via standard Streamlit rendering. N/A for custom fonts. |
-| **Third-party/Reused Components** | Libraries specified in `requirements.txt`: `streamlit`, `torch`, `pandas`, `altair`, `numpy`, `pytest`. All operate under their respective open-source licenses (e.g., Apache 2.0, BSD). |
+| **Third-party/Reused Components** | Libraries specified in `requirements.txt`: `streamlit` (Apache 2.0), `torch` (BSD-3-Clause), `pandas` (BSD-3-Clause), `altair` (BSD-3-Clause), `numpy` (BSD-3-Clause), `pytest` (MIT). |
 
 ## AI Assistance Disclosure
 
 AI assistance was used to aid in developing this submission, specifically for:
-- Initial associative-memory implementation
-- Tests
-- Blog drafting and editing
+- UI scaffolding
+- boilerplate
+- initial associative-memory implementation
+- tests
+- documentation/refactoring
+- blog drafting/editing
 
 **Author Responsibility & Verification:**
 The author explicitly directed the scientific framing, selected the experimental protocol, executed and inspected the experiments, verified all outputs, and reviewed the final claims. The author is fully responsible for the final submission. AI was not used to independently validate scientific claims.
